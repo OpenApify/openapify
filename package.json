@@ -52,10 +52,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenApify/OpenApify.git"
+    "url": "git+https://github.com/OpenApify/openapify.git"
   },
   "bugs": {
-    "url": "https://github.com/OpenApify/OpenApify/issues"
+    "url": "https://github.com/OpenApify/openapify/issues"
   },
-  "homepage": "https://github.com/OpenApify/OpenApify#readme"
+  "homepage": "https://github.com/OpenApify/openapify#readme"
 }
