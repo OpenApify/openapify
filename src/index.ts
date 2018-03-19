@@ -1,16 +1,19 @@
 import * as puppeteer from 'puppeteer';
-import debug from 'debug';
 import * as url from 'url';
 
 
-const log = debug('openapify');
+let Log: any = (...v:any[])=>{};
+
+export function SetLog(fn: any) {
+    Log = fn;
+}
 
 export function Apify (job: Job, config?: Config):Promise<object> {
     return new Promise(async (resolve) => {
         config = initConfig(config);
         job.State = 'running';
         job.StartTime = Date.now();
-        log(`Creating browser`);
+        Log(`Creating browser`);
         const browser = await puppeteer.launch({
             args: [
                 "--no-sandbox",
@@ -19,44 +22,44 @@ export function Apify (job: Job, config?: Config):Promise<object> {
             ],
             headless: config.Headless,
         });
-        log(`Creating new page`);
+        Log(`Creating new page`);
         const page = await browser.newPage();
-        log(`Setting ViewPort`);
+        Log(`Setting ViewPort`);
         await page.setViewport(job.Viewport);
 
 
-        log(`Navigating to ${job.Url}`);
+        Log(`Navigating to ${job.Url}`);
         await page.goto(job.Url, {waitUntil: 'networkidle2'});
         
-        log(`Taking screenshot`);
+        Log(`Taking screenshot`);
         job.Screenshot = await page.screenshot();
 
         if (config.BreakBeforeInject === true) {
-            log(`Waiting for proceed`);
+            Log(`Waiting for proceed`);
             await new Promise(async resolve => {
                 await page.exposeFunction('openapify_continue', () => {
                     resolve()
                 });
             })
-            log(`Continuing execution`);
+            Log(`Continuing execution`);
         }
         
-        log(`Injecting ${job.Scripts.length} scripts`);
+        Log(`Injecting ${job.Scripts.length} scripts`);
         for (let i = 0; i < job.Scripts.length; i++) {
-            log(`Injecting '${job.Scripts[i]}'`);
+            Log(`Injecting '${job.Scripts[i]}'`);
             await page.addScriptTag({url: job.Scripts[i]});
         }
 
         if (config.BreakBeforeFunction === true) {
-            log(`Waiting for proceed`);
+            Log(`Waiting for proceed`);
             await new Promise(async resolve => {
                 await page.exposeFunction('openapify_continue', () => {
                     resolve()
                 });
             })
-            log(`Continuing execution`);
+            Log(`Continuing execution`);
         }
-        log(`Running function \`${job.Function.toString()}\``);
+        Log(`Running function \`${job.Function.toString()}\``);
         try {
             const result = await page.evaluate(job.Function);
             job.Result = result;
@@ -65,8 +68,8 @@ export function Apify (job: Job, config?: Config):Promise<object> {
                 'Error': e.toString(),
             };
         }
-        log(`Result: `, job.Result);
-        log(`Closing Browser`);
+        Log(`Result: `, job.Result);
+        Log(`Closing Browser`);
         browser.close();
         job.State = 'completed';
         job.EndTime = Date.now();

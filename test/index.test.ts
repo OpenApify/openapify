@@ -1,6 +1,7 @@
 import * as OpenApify from '../src/index';
 import * as http from 'http';
 
+OpenApify.SetLog(console.log);
 
 function createTestServer(content: string): Promise<string> {
     return new Promise(resolve => {
