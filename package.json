@@ -1,6 +1,6 @@
 {
   "name": "openapify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An Apify clone",
   "main": "out/index.js",
   "scripts": {
