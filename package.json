@@ -1,7 +1,7 @@
 {
   "name": "openapify",
-  "version": "1.0.0",
-  "description": "A typescript boilerplate to publish modules to npm",
+  "version": "1.0.1",
+  "description": "An Apify clone",
   "main": "out/index.js",
   "scripts": {
     "test": "cross-env DEBUG=openapify* jest --ci",
